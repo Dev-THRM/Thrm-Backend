@@ -15,7 +15,7 @@ const app = express();
 
 // --- CRITICAL FIX 1: CORS must explicitly allow your frontend URL and credentials ---
 app.use(cors({
-    origin: "http://localhost:5173", // Your React frontend URL
+    origin: "https://thrmdigitalmarketing.in", // Your React frontend URL
     credentials: true // Allows cookies to be sent back and forth
 }));
 
