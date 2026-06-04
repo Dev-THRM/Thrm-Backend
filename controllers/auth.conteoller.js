@@ -32,34 +32,30 @@ export const login = async(req, res) => {
     
     let user = await admin.findOne({name, password});
     if(user) {
-        // === FIX: ADDED AWAIT HERE ===
         const token = await signtoken(user._id, user.name); 
         
         return res.cookie("AccessToken", token, {
             httpOnly: true,
-            secure: false, 
-            sameSite: "Lax",
+            secure: true,       // CRITICAL: Must be true in production (HTTPS)
+            sameSite: "none",   // CRITICAL: Required for cross-domain cookies
             maxAge: 7*24*60*60*1000
-        }).json({ name: user.name, role: "admin" }); // Return object for React Context
+        }).json({ name: user.name, role: "admin" }); 
     }
     
     user = await appuser.findOne({name, password});
     if(user) {
-        // === FIX: ADDED AWAIT HERE ===
         const token = await signtoken(user._id, user.name); 
         
         return res.cookie("AccessToken", token, {
             httpOnly: true,
-            secure: false,
-            sameSite: "Lax",
+            secure: true,       // CRITICAL: Must be true in production (HTTPS)
+            sameSite: "none",   // CRITICAL: Required for cross-domain cookies
             maxAge: 7*24*60*60*1000
-        }).json({ name: user.name, role: "nuser" }); // Return object for React Context
+        }).json({ name: user.name, role: "nuser" }); 
     }
     
     return res.status(401).json("Invalid credentials");
 };
-
-
 
 //  ------------------------------------ session data function ------------------------------------
 export const SessionData = async (req, res) => {
@@ -71,15 +67,16 @@ export const SessionData = async (req, res) => {
     return res.status(200).json(user); 
 }
 
-//  ------------------------------------ login function ------------------------------------
+//  ------------------------------------ logout function ------------------------------------
 export const logout = async(req, res) => {
     try {
+        // To clear a cookie, the secure and sameSite attributes must match exactly how it was set!
         return res.clearCookie(
         "AccessToken",
         {
             httpOnly: true,
-            secure: false,
-            samesite: "Lax"
+            secure: true,       // CRITICAL MATCH
+            sameSite: "none"    // CRITICAL MATCH (also fixed capitalization from samesite to sameSite)
         }
     ).json("logout successful");
     } catch (e) {
