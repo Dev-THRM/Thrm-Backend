@@ -28,13 +28,13 @@ export const getFounderBySlug = async(req, res) =>{
 
 export const createFounder = async(req, res)=>{
     try{
-        const { slug, name, tagline, title, company, episode, bio, instaUrl, quote, social, topics } = req.body;
+        const { slug, name, title, company, episode, bio, instaUrl, quote, social } = req.body;
 
         // Check required fields
-        if (!slug || !name || !tagline || !title || !company || !episode || !bio || !instaUrl || !quote) {
+        if (!slug || !name || !title || !company || !episode || !bio || !instaUrl || !quote) {
             return res.status(400).json({
                 success: false,
-                error: 'Please provide all required fields: slug, name, tagline, title, company, episode, bio, instaUrl, quote.'
+                error: 'Please provide all required fields: slug, name, title, company, episode, bio, instaUrl, quote.'
             });
         }
 
@@ -55,19 +55,9 @@ export const createFounder = async(req, res)=>{
             }
         }
 
-        let topicsData = topics;
-        if (typeof topics === 'string') {
-            try {
-                topicsData = JSON.parse(topics);
-            } catch (e) {
-                topicsData = topics.split(',').map(t => t.trim()).filter(Boolean);
-            }
-        }
-
         const founder = await Founder.create({
             slug,
             name,
-            tagline,
             title,
             company,
             imageUrl: req.file.path,
@@ -75,8 +65,7 @@ export const createFounder = async(req, res)=>{
             bio,
             instaUrl,
             quote,
-            social: socialData,
-            topics: topicsData
+            social: socialData
         });
 
         res.status(201).json({success: true, data: founder});

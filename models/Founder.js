@@ -45,15 +45,8 @@ const founderSchema = new mongoose.Schema({
         required: [true, "Please enter a quote"],
         trim: true
     },
-    tagline: {
-        type: String,
-        required: [true, "Please enter a tagline"],
-        trim: true
-    },
-    topics: {
-        type: [String],
-        default: []
-    },
+
+
     social: {
       instagram: String,
       linkedin: String,
