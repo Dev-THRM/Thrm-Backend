@@ -7,6 +7,7 @@ import { blogrouter } from "./routes/blogRoutes.js";
 import { clientrouter } from "./routes/clientRoutes.js";
 import { adminrouter } from "./routes/adminRoutes.js";
 import { socialRouter } from "./routes/socialRoutes.js";
+import { founderRouter } from "./routes/founderRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -29,7 +30,7 @@ app.use(cors({
     origin: function (origin, callback) {
         // Allow requests with no origin (like mobile apps, curl, etc.)
         if (!origin) return callback(null, true);
-        
+
         if (allowedOrigins.includes(origin)) {
             return callback(null, true);
         } else {
@@ -52,13 +53,14 @@ app.use('/api/blogs', blogrouter);
 app.use('/api/admin', adminrouter); // --- CRITICAL FIX 3: Added the missing '/'
 
 app.use('/api/socal', socialRouter);
+app.use('/api/founders', founderRouter);
 
 // 404 Error Handler
 app.use((req, res, next) => {
-  res.status(404).json({ success: false, error: 'API Endpoint Not Found' });
+    res.status(404).json({ success: false, error: 'API Endpoint Not Found' });
 });
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+    console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
 });
