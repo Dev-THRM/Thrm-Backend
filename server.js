@@ -14,8 +14,29 @@ connectDB();
 const app = express();
 
 // --- CRITICAL FIX 1: CORS must explicitly allow your frontend URL and credentials ---
+const allowedOrigins = [
+    "https://thrmdigitalmarketing.in",
+    "https://www.thrmdigitalmarketing.in"
+];
+
+// Only allow localhost/127.0.0.1 on port 5173 in development mode
+if (process.env.NODE_ENV !== "production") {
+    allowedOrigins.push("http://localhost:5173");
+    allowedOrigins.push("http://127.0.0.1:5173");
+}
+
 app.use(cors({
-    origin: "https://thrmdigitalmarketing.in", // Your React frontend URL
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps, curl, etc.)
+        if (!origin) return callback(null, true);
+        
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        } else {
+            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+            return callback(new Error(msg), false);
+        }
+    },
     credentials: true // Allows cookies to be sent back and forth
 }));
 
