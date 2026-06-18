@@ -16,7 +16,16 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'thrm_clients', // Creates a folder in your Cloudinary account
+    folder: async (req, file) => {
+      const urlPath = (req.baseUrl + req.path).toLowerCase();
+      if (urlPath.includes('founder')) {
+        return 'thrm_founders';
+      }
+      if (urlPath.includes('blog') || urlPath.includes('/b')) {
+        return 'thrm_blogs';
+      }
+      return 'thrm_clients';
+    },
     allowed_formats: ['jpg', 'png', 'jpeg', 'webp', 'svg'],
     transformation: [{ width: 500, height: 500, crop: 'limit' }] // Auto-optimizes the image
   },
