@@ -8,6 +8,7 @@ import { clientrouter } from "./routes/clientRoutes.js";
 import { adminrouter } from "./routes/adminRoutes.js";
 import { socialRouter } from "./routes/socialRoutes.js";
 import { founderRouter } from "./routes/founderRoutes.js";
+import { openingRouter } from "./routes/openingRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -54,6 +55,7 @@ app.use('/api/admin', adminrouter); // --- CRITICAL FIX 3: Added the missing '/'
 
 app.use('/api/socal', socialRouter);
 app.use('/api/founders', founderRouter);
+app.use('/api/openings', openingRouter);
 
 // 404 Error Handler
 app.use((req, res, next) => {
