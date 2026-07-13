@@ -3,6 +3,8 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser'; // <-- IMPORT THIS
 import { connectDB } from './config/db.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { blogrouter } from "./routes/blogRoutes.js";
 import { clientrouter } from "./routes/clientRoutes.js";
 import { adminrouter } from "./routes/adminRoutes.js";
@@ -10,10 +12,14 @@ import { socialRouter } from "./routes/socialRoutes.js";
 import { founderRouter } from "./routes/founderRoutes.js";
 import { openingRouter } from "./routes/openingRoutes.js";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 dotenv.config();
 connectDB();
 
 const app = express();
+app.set('trust proxy', 1);
 
 // --- CRITICAL FIX 1: CORS must explicitly allow your frontend URL and credentials ---
 const allowedOrigins = [
@@ -47,6 +53,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // --- CRITICAL FIX 2: Initialize Cookie Parser ---
 app.use(cookieParser());
+
+// Serve static files for uploads
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Mount Routes
 app.use('/api/clients', clientrouter);
